@@ -42,7 +42,7 @@ def options(opt):
 def configure(cfg):
 	cfg.load('gcc gxx')
 	
-	cfg.env.append_value('CXXFLAGS', '-std=c++11')
+	cfg.env.append_value('CXXFLAGS', '-std=c++20')
 	#cfg.env.append_value('LIB', 'pthread')
 	cfg.env.append_value('CXXFLAGS', '-g -rdynamic'.split()) # For debug.
 
@@ -65,16 +65,10 @@ def build(bld):
 			'main.cpp',
 			'BitmapRawConverter.cpp',
 			'EasyBMP.cpp',
+            'detector.cpp',
 		]
 	)
 	
-
-
-
-
-
-
-
 def run(ctx):
 	'''./waf run --app=<NAME>'''
 	if ctx.options.app:
