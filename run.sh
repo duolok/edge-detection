@@ -2,7 +2,7 @@
 cd src/
 ./waf configure
 cd ..
-source_image="resources/hk.bmp"
+source_image="resources/sm.bmp"
 cp "$source_image" resources/serial_prewitt.bmp 
 cp "$source_image" resources/serial_edge.bmp 
 cp "$source_image" resources/parallel_prewitt.bmp 

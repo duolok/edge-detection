@@ -13,7 +13,7 @@ Detector::Detector() {}
  * @brief Functions that starts edge detection process
  */
 void Detector::start_detector(){
-    vector<char*> images = {"../resources/hk.bmp",
+    vector<char*> images = {"../resources/sm.bmp",
                             "../resources/serial_prewitt.bmp",
                             "../resources/serial_edge.bmp",
                             "../resources/parallel_prewitt.bmp",
