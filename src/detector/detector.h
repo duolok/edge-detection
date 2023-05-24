@@ -1,12 +1,11 @@
-#ifndef DETECTOR
-#define detector
-
 #include <iostream>
 #include <vector>
 #include <string>
 #include <tbb/task_group.h>
 #include "../bitmap/EasyBMP.h"
 #include "../bitmap/BitmapRawConverter.h"
+
+#pragma once
 
 const int THRESHOLD = 128;
 
@@ -70,4 +69,3 @@ class Detector {
         void set_detector(int);
         void set_filter_size(int);
 };
-#endif
