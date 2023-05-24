@@ -1,5 +1,5 @@
 #!/bin/bash
-source_image="resources/color.bmp"
+source_image="resources/hk.bmp"
 cp "$source_image" resources/serial_prewitt.bmp 
 cp "$source_image" resources/serial_edge.bmp 
 cp "$source_image" resources/parallel_prewitt.bmp 
