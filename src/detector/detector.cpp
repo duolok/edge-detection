@@ -7,7 +7,7 @@ using namespace tbb;
 Detector::Detector() {}
 
 void Detector::start_detector(){
-    vector<char*> images = {"../resources/color.bmp",
+    vector<char*> images = {"../resources/hk.bmp",
                             "../resources/serial_prewitt.bmp",
                             "../resources/serial_edge.bmp",
                             "../resources/parallel_prewitt.bmp",
@@ -34,7 +34,7 @@ void Detector::start_detector(){
 
     set_image_width(width);
     set_image_height(height);
-    set_cutoff(250);
+    set_cutoff(800);
     set_filter_size(3);
     set_area(1);
 
