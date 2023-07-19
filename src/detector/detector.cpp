@@ -4,16 +4,10 @@
 using namespace std;
 using namespace tbb;
 
-/**
- * @brief Detector constructor
- */
 Detector::Detector() {}
 
-/*
- * @brief Functions that starts edge detection process
- */
 void Detector::start_detector(){
-    vector<char*> images = {"../resources/sm.bmp",
+    vector<char*> images = {"../resources/color.bmp",
                             "../resources/serial_prewitt.bmp",
                             "../resources/serial_edge.bmp",
                             "../resources/parallel_prewitt.bmp",
@@ -41,7 +35,7 @@ void Detector::start_detector(){
     set_image_width(width);
     set_image_height(height);
     set_cutoff(800);
-    set_filter_size(3);
+    set_filter_size(5);
     set_area(1);
 
     int offset = (this->filter_size-1)/2;
@@ -69,14 +63,6 @@ void Detector::start_detector(){
 
 }
 
-/*
- * @brief Function that starts test for each method, writes changes to the file and prints time
- * @param test_number Number of the test, used in combination with case
- * @param io_file Buffer of the output image
- * @param out_file_name Name of the output file
- * @param out_buffer Matrix of the output file
- * @param grid image border structure
- */
 void Detector::run_test_nr(int test_number, BitmapRawConverter* io_file, char* out_file_name, int* out_buffer, pixel_grid grid) {
     auto start = std::chrono::high_resolution_clock::now();
 	switch (test_number)
@@ -108,16 +94,6 @@ void Detector::run_test_nr(int test_number, BitmapRawConverter* io_file, char* o
     cout <<"Time: " << time_took <<  " | Cutoff: " << this->cutoff << " | Distance:  " << this->filter_size <<  " | Area: "<< this->area << "."<<  endl; 
 }
 
-/*
- * @brief Function that applies Prewitt filter
- * @param input_matrix Input image buffer
- * @param filter_h Pointer to the horizontal prewitt operator
- * @param filter_v Pointer to the vertial prewitt operator
- * @param x Pixel width coordinate
- * @param y Pixel height coordinate
- * @param picture_size Width of the picture
- * @param filter_size Width of the prewitt filter matrix
- */
 int prewitt_convolve(int *input_matrix, const int *filter_h, const int *filter_v, int x, int y, int picture_size, int filter_size) {
     int picture_offset = (filter_size - 1) / 2;
     int vertical_sum = 0, horizontal_sum = 0;
@@ -130,14 +106,6 @@ int prewitt_convolve(int *input_matrix, const int *filter_h, const int *filter_v
     return (abs(horizontal_sum) + abs(vertical_sum)) > THRESHOLD ? 255 : 0;
 }
 
-/*
- * @brief Function that calculate and manage p and o values for edge detection 
- * @param input_matrix Input image buffer
- * @param width Image width
- * @param x Pixel width coordinate
- * @param y Pixel height coordinate
- * @param filter_size Area around the pixel that is looked at
- */
 int edge_detection_p_and_o(int *input_matrix, int width, int x, int y, int filter_size){
     int p = 0, o = 1;
     int picture_offset = (filter_size - 1) / 2;
@@ -150,12 +118,6 @@ int edge_detection_p_and_o(int *input_matrix, int width, int x, int y, int filte
     return abs(p-o) == 1 ? 255: 0;
 }
 
-/*
- * @brief Function that applies prewitt filter to the image
- * @param input_matrix Input image matrix
- * @param output_matrix Output image matrix
- * @param grid Image border structure
- */
 void Detector::serial_prewitt(int *input_matrix, int *output_matrix, pixel_grid grid) {
     for(int i = grid.start_h; i < grid.end_h; ++i) {
         for(int j = grid.start_w; j < grid.end_w; ++j) {
@@ -164,12 +126,6 @@ void Detector::serial_prewitt(int *input_matrix, int *output_matrix, pixel_grid 
     }
 }
 
-/*
- * @brief Function that implements parallel version of prewitt algorithm
- * @param input_matrix Input image matrix
- * @param output_matrix Output image matrix
- * @param grid Image border structure
- */
 void Detector::parallel_prewitt(int *input_matrix, int *output_matrix, pixel_grid grid) {
     if (abs(grid.end_w - grid.start_w) <= this->cutoff || abs(grid.end_h - grid.start_h) <= this->cutoff){
         serial_prewitt(input_matrix, output_matrix, grid);
@@ -212,12 +168,6 @@ void Detector::parallel_prewitt(int *input_matrix, int *output_matrix, pixel_gri
     }
 }
 
-/*
- * @brief Function that applies serial edge detection to the image
- * @param input_matrix Input image matrix
- * @param output_matrix Output image matrix
- * @param grid Image border structure
- */
 void Detector::serial_edge_detection(int *input_matrix, int *output_matrix, pixel_grid grid) {
     for(int i = grid.start_h; i < grid.end_h; ++i) {
         for(int j = grid.start_w; j < grid.end_w; ++j) {
@@ -226,12 +176,6 @@ void Detector::serial_edge_detection(int *input_matrix, int *output_matrix, pixe
     }
 }
 
-/*
- * @brief Function that implements parallel version of edge detection algorithm
- * @param input_matrix Input image matrix
- * @param output_matrix Output image matrix
- * @param grid Image border structure
- */
 void Detector::parallel_edge_detection(int *input_matrix, int *output_matrix, pixel_grid grid) {
     if (abs(grid.end_w - grid.start_w) <= this->cutoff || abs(grid.end_h - grid.start_h) <= this->cutoff){
         serial_edge_detection(input_matrix, output_matrix, grid);
@@ -274,43 +218,23 @@ void Detector::parallel_edge_detection(int *input_matrix, int *output_matrix, pi
     }
 }
 
-/*
- * @brief Area setter
- * @param area Area around the pixel for edge detection
- */
 void Detector::set_area(int area) {
     this->area = area * 2 + 1; 
 }
 
-/*
- * @brief Image height setter
- * @param height Height of the image
- */
 void Detector::set_image_height(int height) {
     this->image_height = height; 
 }
 
-/*
- * @brief Image width setter
- * @param width Width of the image
- */
 void Detector::set_image_width(int width) {
     this->image_width = width; 
 }
 
 
-/*
- * @brief Cutoff setter
- * @param cutoff Cutoff used by parallel algorithms
- */
 void Detector::set_cutoff(int cutoff) {
     this->cutoff = cutoff; 
 }
 
-/*
- * @brief Filter Size setter
- * @param filter_size Value that is used when deciding Prewitt filter
- */
 void Detector::set_filter_size(int filter_size) {
     this->filter_size = filter_size;
     if(filter_size == 3) {
